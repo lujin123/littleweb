@@ -1,13 +1,27 @@
 import asyncio
 import json
+import re
 
 from littleweb import utils
 from littleweb.server import ServerHttpProtocol
 
 
 class Application(object):
-    def __init__(self, router):
-        self._router = router
+    def __init__(self, router=None):
+        self._router = router or []
+
+    def route(self, url):
+        def _decorate(cls):
+            self.add_router(url, cls)
+            return cls
+
+        return _decorate
+
+    def add_router(self, url, cls):
+        self._router.append((url, cls))
+
+    def add_router_batch(self, routes):
+        self._router += routes
 
     def make_handler(self):
         self._router = self.format_url(self._router)
@@ -20,8 +34,8 @@ class Application(object):
             if not pattern.startswith('^'):
                 pattern = r'^' + pattern
             if not pattern.endswith('$'):
-                pattern += '$'
-            routers.append((pattern, cls))
+                pattern += r'$'
+            routers.append((re.compile(pattern), cls))
         return routers
 
     def run(self, host='127.0.0.1', port=8080, debug=True):

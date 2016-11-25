@@ -1,6 +1,5 @@
 import asyncio
 import inspect
-import re
 
 from littleweb import utils
 from littleweb.protocol import HttpParser
@@ -28,9 +27,9 @@ class ServerHttpProtocol(asyncio.Protocol):
         response = HttpResponse(self.transport, {})
 
         for pattern, cls in self._routers:
-            m = re.match(pattern, request.resource)
-            if m:
-                args = m.groups()
+            match = pattern.match(request.resource)
+            if match:
+                args = match.groups()
                 method = request.method.lower()
                 if hasattr(cls, method):
                     fn = getattr(cls, method)
