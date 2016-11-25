@@ -29,15 +29,15 @@ class HttpParser(object):
 
     @staticmethod
     def parse_query(path):
-        resource, *query_str = path.split('?', 1)
+        resource, query_str = path.split('?', 1)
         query_params = {}
         if query_str:
-            row_params = query_str[0].split('#')[0].split('&')
-
+            query, anchor = query_str.split('#', 1)
+            row_params = query.split('&', 1)
             for param in row_params:
-                key, *value = param.split('=')
+                key, value = param.split('=', 1)
                 if key:
-                    query_params[key] = ''.join(value)
+                    query_params[key] = value
 
         return resource, query_params
 
@@ -46,8 +46,8 @@ class HttpParser(object):
         # todo 检查header是否合法
         headers = {}
         for header in row_headers:
-            key, *value = header.split(':')
-            headers[key.lower()] = ':'.join(value).strip()
+            key, value = header.split(':', 1)
+            headers[key.lower()] = value.strip()
         return headers
 
     @staticmethod
@@ -56,11 +56,11 @@ class HttpParser(object):
         if not body:
             return body_params
 
-        bodies = body.split('&')
+        bodies = body.split('&', 1)
         for b in bodies:
-            key, *value = b.split('=')
+            key, value = b.split('=', 1)
             if key:
-                body_params[key] = ''.join(value)
+                body_params[key] = value
 
         return body_params
 

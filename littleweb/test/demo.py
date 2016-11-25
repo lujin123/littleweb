@@ -25,4 +25,4 @@ routes = [
 ]
 
 app = Application(routes)
-app.run()
+app.run(port=8888)

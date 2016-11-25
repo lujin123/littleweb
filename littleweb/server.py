@@ -42,12 +42,12 @@ class ServerHttpProtocol(asyncio.Protocol):
                         yield from fn(instance, *args)
                         return
 
-        yield from self.handle_404(response)
+        self.handle_404(response)
 
-    @asyncio.coroutine
-    def handle_404(self, response):
+    @staticmethod
+    def handle_404(response):
         response.add_header('Content-Type', 'text/html')
-        yield from response.send_data('Page Not Found!')
+        response.send_data('Page Not Found!')
 
 
 class HttpResponse(object):
