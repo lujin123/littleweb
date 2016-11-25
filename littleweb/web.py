@@ -43,9 +43,14 @@ class BaseHandler(object):
         self.request = None
         self.response = None
 
-    def get_query_int(self, key, default=None):
+    def get_query_int(self, key, default=None, min_value=None, max_value=None):
         res = self.get_query_str(key, default)
-        return utils.str2int(res, default)
+        value = utils.str2int(res, default)
+        if min_value is not None:
+            value = max(value, min_value)
+        if max_value is not None:
+            value = min(value, max_value)
+        return value
 
     def get_query_bool(self, key, default=False):
         res = self.get_query_str(key)
@@ -68,9 +73,14 @@ class BaseHandler(object):
         body_params = self.get_request_data('body_params', {})
         return body_params.get(key, default)
 
-    def get_post_int(self, key, default=None):
+    def get_post_int(self, key, default=None, min_value=None, max_value=None):
         res = self.get_post_str(key, default)
-        return utils.str2int(res, default)
+        value = utils.str2int(res, default)
+        if min_value is not None:
+            value = max(value, min_value)
+        if max_value is not None:
+            value = min(value, max_value)
+        return value
 
     def get_post_bool(self, key, default=False):
         res = self.get_post_str(key)

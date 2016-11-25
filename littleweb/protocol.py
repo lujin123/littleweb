@@ -1,3 +1,6 @@
+__all__ = ["HttpParser"]
+
+
 class HttpParser(object):
     def __init__(self, data, max_headers=32768, max_field_size=8190):
         self._data = data
@@ -29,10 +32,10 @@ class HttpParser(object):
 
     @staticmethod
     def parse_query(path):
-        resource, query_str = path.split('?', 1)
+        resource, query_str = path.split('?', 1) if '?' in path else (path, None)
         query_params = {}
         if query_str:
-            query, anchor = query_str.split('#', 1)
+            query, anchor = query_str.split('#', 1) if '#' in query_str else (query_str, None)
             row_params = query.split('&', 1)
             for param in row_params:
                 key, value = param.split('=', 1)

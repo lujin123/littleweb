@@ -2,7 +2,10 @@ import asyncio
 import inspect
 import re
 
+from littleweb import utils
 from littleweb.protocol import HttpParser
+
+__all__ = ['ServerHttpProtocol', 'HttpRequest', 'HttpResponse']
 
 
 class ServerHttpProtocol(asyncio.Protocol):
@@ -85,8 +88,8 @@ class HttpResponse(object):
         self.write_eof()
 
     def status_line(self):
-        # todo http状态码和描述的映射关系
-        return 'HTTP/%s.%s %s %s\r\n' % (self._version[0], self._version[1], self._status_code, 'OK')
+        status_text = utils.get_status_text(self.status_code)
+        return 'HTTP/%s.%s %s %s\r\n' % (self._version[0], self._version[1], self._status_code, status_text)
 
     def send_headers(self, sep=': ', end='\r\n'):
         headers = self.status_line() + ''.join([str(k) + sep + str(v) + end for k, v in self._headers.items()]) + '\r\n'
