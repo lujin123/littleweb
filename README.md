@@ -68,3 +68,4 @@ if __name__ == '__main__':
 1. database
 2. flask style url (use decorator)
 3. log
+4. middleware
