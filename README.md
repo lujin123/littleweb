@@ -30,6 +30,35 @@ app.run()
 
 ```
 
+also can use decorator:
+
+```python
+from asyncio import coroutine
+
+from littleweb.web import Application, BaseHandler
+
+app = Application()
+
+
+@app.route('/index/(?P<id>\d+)/(\w+)')
+class Index(BaseHandler):
+    @coroutine
+    def get(self, id, name='sss'):
+        print('id: ', id)
+        print('name: ', name)
+        res = {
+            'id': id,
+            'name': name
+        }
+        return self.send_json(res)
+
+app.run(port=8888)
+
+```
+
+
+
+
 test code:
 
 ```python
@@ -66,6 +95,6 @@ if __name__ == '__main__':
 ## todo list
 
 1. database
-2. flask style url (use decorator)
+2. ~~flask style url (use decorator)~~
 3. log
 4. middleware
